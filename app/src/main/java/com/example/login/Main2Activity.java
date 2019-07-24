@@ -11,17 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class Main2Activity extends AppCompatActivity {
-    //test 입니다.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        //test
     }
 
     public void onBackButtonClicked(View v) {
-        Toast.makeText(getApplicationContext(), "메인화면으로 돌아감", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "메인화면으로 돌아갑니다.", Toast.LENGTH_LONG).show();
         finish();
 
     }
