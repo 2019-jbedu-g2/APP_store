@@ -21,7 +21,7 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void onBackButtonClicked(View v) {
-        Toast.makeText(getApplicationContext(), "메인화면으로 돌아갑니다", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "메인화면으로 돌아감", Toast.LENGTH_LONG).show();
         finish();
 
     }
