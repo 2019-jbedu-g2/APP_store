@@ -1,6 +1,7 @@
 package com.example.login;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,9 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class Main2Activity extends AppCompatActivity {
     Button ScannerButton;
+    String barcodenumber = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +29,20 @@ public class Main2Activity extends AppCompatActivity {
                 intent.initiateScan();              // 스캔화면으로 넘어감.
             }
         });
+    }
+    public void onActivityResult(int requestCode,int resultCode, Intent data){
+        //  com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE
+        //  = 0x0000c0de; // Only use bottom 16 bits
+        if(requestCode == IntentIntegrator.REQUEST_CODE){
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);  // 결과물을 받을 그릇 생성
+            if(result == null) {
+                Toast.makeText(this, "Cancelled",Toast.LENGTH_LONG).show();     // 결과물이 없다면 취소 토스트 출력
+            } else {
+                barcodenumber=result.getContents();                       // 결과물을 받아서 변수에 집어넣음
+            }
+        }else{
+            super.onActivityResult(requestCode,resultCode,data);            // 재시도.
+        }
     }
     private void initControls(){
         if (ScannerButton == null) {
