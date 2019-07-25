@@ -10,12 +10,27 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class Main2Activity extends AppCompatActivity {
+import com.google.zxing.integration.android.IntentIntegrator;
 
+public class Main2Activity extends AppCompatActivity {
+    Button ScannerButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        initControls();
+        ScannerButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                IntentIntegrator intent = new IntentIntegrator(Main2Activity.this); // zxing 내부의 스캐너 호출
+                intent.setBeepEnabled(true);        // 바코드 인식시에 비프음의 여부
+                intent.initiateScan();              // 스캔화면으로 넘어감.
+            }
+        });
+    }
+    private void initControls(){
+        if (ScannerButton == null) {
+            ScannerButton = (Button) findViewById(R.id.button3);
+        }
     }
 
     public void onBackButtonClicked(View v) {
