@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"
             android:gravity="center"
-            android:text="가게명"
+            android:text="JJIM"
             android:textSize="50dp" />
 
         <EditText
@@ -39,7 +39,7 @@
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/pwText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/idText"
@@ -60,7 +60,7 @@
             android:id="@+id/loginButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editText3"
+            android:layout_below="@+id/pwText"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentEnd="true"
@@ -70,7 +70,6 @@
             android:layout_marginTop="60dp"
             android:layout_marginEnd="161dp"
             android:layout_marginRight="161dp"
-            android:onClick="onButton1Clicked"
             android:text="로그인" />
 
     </LinearLayout>

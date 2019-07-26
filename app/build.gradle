@@ -30,4 +30,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     //zxing 라이브러리
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
+    implementation 'org.java-websocket:Java-WebSocket:1.4.0'
 }
