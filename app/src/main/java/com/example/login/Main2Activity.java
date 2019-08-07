@@ -1,7 +1,9 @@
 package com.example.login;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +22,9 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,8 +34,9 @@ public class Main2Activity extends AppCompatActivity {
     Button ScannerButton;
     String barcodenumber = "";
     String s = "";
-    TextView storeView,textView;
+    TextView storeView,textView,Type,Status;
     String URL = "ws://192.168.0.8:8000/queue/";
+    String result ="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,26 +74,66 @@ public class Main2Activity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            storeView.setText(message);
-                            System.out.println(message);
+                            storeView.setText("");
+                            Type.setText("");
+                            Status.setText("");
+                            try {
+                                JSONObject jsonObject = new JSONObject(message);
+                                String messagedata = jsonObject.getString("message");
+                                JSONArray JSON = new JSONArray(messagedata);
+                                for (int i = 0; i <JSON.length();i++){
+                                    JSONObject jsonobject = JSON.getJSONObject(i);
+                                    storeView.append(jsonobject.getString("barcode"));
+                                    String OnOff = jsonobject.getString("onoffline");
+                                    if (OnOff.equals("false")){
+                                        Type.append("온라인고객");
+                                    }else{
+                                        Type.append("방문고객");
+                                    }
+                                    Status.append(jsonobject.getString("status"));
+                                    storeView.append("\n");
+                                    Type.append("\n");
+                                    Status.append("\n");
+                                }
+
+                            }catch (JSONException e){
+                                e.getStackTrace();
+                            }
                         }
                     });
                 }
 
                 @Override
                 public void onClose(int code, String reason, boolean remote) {
-                    Toast.makeText(getApplicationContext(), "서버 연결에 종료되였습니다.", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "서버 연결이 종료되였습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                 }
 
                 @Override
                 public void onError(Exception ex) {
                     ex.getStackTrace();
-                    Toast.makeText(getApplicationContext(), "서버 연결에 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "서버와의 연결에 문제가 발생하였습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                 }
             };
         }catch(URISyntaxException E){
             E.getStackTrace();
-            Toast.makeText(getApplicationContext(), "서버 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "서버 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
         wsc.connect();
     }
@@ -115,10 +161,17 @@ public class Main2Activity extends AppCompatActivity {
         if (textView == null){
             textView = (TextView) findViewById(R.id.textView);
         }
+        if (Type == null) {
+            Type = (TextView) findViewById(R.id.Type);
+        }
+        if (Status == null){
+            Status = (TextView) findViewById(R.id.Status);
+        }
     }
 
     public void onBackButtonClicked(View v) {
-        Toast.makeText(getApplicationContext(), "메인화면으로 돌아갑니다.", Toast.LENGTH_LONG).show();
+        wsc.close();
+        //Toast.makeText(getApplicationContext(), "메인화면으로 돌아갑니다.", Toast.LENGTH_LONG).show();
         finish();
 
     }
@@ -143,5 +196,33 @@ public class Main2Activity extends AppCompatActivity {
     dialog.show();
 
 
+    }
+    public class NetworkTask extends AsyncTask<Void, Void, String> {
+
+        String url;
+        ContentValues values;
+
+        public NetworkTask(String url, ContentValues values) {
+            this.url = url;
+            this.values = values;
+        }
+
+        //background작업 시작전 ui작업을 진행.
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        // background 작업 진행
+        protected String doInBackground(Void... params) {
+            RequestHttpURLConnection requestHttpURLConnection = new RequestHttpURLConnection();
+            result = requestHttpURLConnection.request(url, values); // 해당 주소로 부터 결과물 얻음
+            return result;
+        }
+
+        // 끝난후 ui진행
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+        }
     }
 }

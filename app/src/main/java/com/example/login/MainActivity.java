@@ -90,8 +90,13 @@ public class MainActivity extends AppCompatActivity {
 //            if(s.equals("215486211") || s.equals("289461321") || s.equals("246899512")
 //                    || s.equals("234879246") || s.equals("264875312") || s.equals("216484531")
 //                    || s.equals("246879513") || s.equals("202157945")) {
-            if(s.equals("아이디랑 비밀번호")) {
-                Toast.makeText(getApplicationContext(), "아이디와 비밀번호를 다시 확인하세요", Toast.LENGTH_LONG).show();
+            if(s.equals("아이디랑 비밀번호가 다릅니다.")) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "아이디와 비밀번호를 다시 확인하세요", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
             else {
 //                info.clear();
