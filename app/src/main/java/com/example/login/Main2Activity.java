@@ -28,15 +28,22 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Main2Activity extends AppCompatActivity {
     WebSocketClient wsc;
+    ContentValues info = new ContentValues();
     Button ScannerButton;
     String barcodenumber = "";
     String s = "";
     TextView storeView,textView,Type,Status;
     String URL = "ws://192.168.0.8:8000/queue/";
+    String url = "http://192.168.0.8:8000/account/";
     String result ="";
+    String bar = "";
+    String PhoneNum = "";
+    LinkedHashMap <String,String> offLineList = new LinkedHashMap();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +74,7 @@ public class Main2Activity extends AppCompatActivity {
                 @Override
                 public void onOpen(ServerHandshake handshakedata) {
                     wsc.send("");
+                    wsc.send("");
                 }
 
                 @Override
@@ -80,14 +88,19 @@ public class Main2Activity extends AppCompatActivity {
                             try {
                                 JSONObject jsonObject = new JSONObject(message);
                                 String messagedata = jsonObject.getString("message");
+                                System.out.println(messagedata);
                                 JSONArray JSON = new JSONArray(messagedata);
+                                System.out.println(offLineList.entrySet());
                                 for (int i = 0; i <JSON.length();i++){
                                     JSONObject jsonobject = JSON.getJSONObject(i);
-                                    storeView.append(jsonobject.getString("barcode"));
                                     String OnOff = jsonobject.getString("onoffline");
+                                    System.out.println(jsonobject.getString("barcode"));
                                     if (OnOff.equals("false")){
+                                        storeView.append(jsonobject.getString("barcode"));
                                         Type.append("온라인고객");
                                     }else{
+                                        String Code = jsonobject.getString("barcode");
+                                        storeView.append(offLineList.get(Code));
                                         Type.append("방문고객");
                                     }
                                     Status.append(jsonobject.getString("status"));
@@ -183,8 +196,12 @@ public class Main2Activity extends AppCompatActivity {
 // OK 버튼 이벤트
     dialog.setPositiveButton("예약", new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
-            String inputValue = etEdit.getText().toString();
-            Toast.makeText(Main2Activity.this,"예약되었습니다.", Toast.LENGTH_SHORT).show();
+            PhoneNum = "";
+            PhoneNum = etEdit.getText().toString();
+            info.clear();
+            info.put("off",s);
+            NetworkTask networkTask = new NetworkTask(url,info);
+            networkTask.execute();
             }
         });
 // Cancel 버튼 이벤트
@@ -222,7 +239,18 @@ public class Main2Activity extends AppCompatActivity {
         // 끝난후 ui진행
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
+            bar ="";
+            if (s.length() != 0) {
+                bar = s.substring(0, 10);
+            }
+            offLineList.put(bar,PhoneNum);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(Main2Activity.this, "예약되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
+            wsc.send("");
         }
     }
 }
