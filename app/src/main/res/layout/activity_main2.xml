@@ -16,23 +16,49 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="onBackButtonClicked"
-                android:text="←" />
-
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="332dp"
+                android:layout_width="320dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="가게명"
                 android:textSize="40dp" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:onClick="onBackButtonClicked"
+                android:text="LogOut" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="새로고침시간" />
+
+            <TextView
+                android:id="@+id/TimeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="30" />
+
+            <Button
+                android:id="@+id/RefreshButton"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="새로고침" />
         </LinearLayout>
 
         <LinearLayout
@@ -123,15 +149,24 @@
 
             <Button
                 android:id="@+id/button2"
-                android:layout_width="208dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:onClick="onClick"
                 android:text="방문 고객 등록" />
 
             <Button
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="고객관리" />
+
+            <Button
                 android:id="@+id/button3"
-                android:layout_width="201dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:text="온라인 고객 받기" />
         </LinearLayout>
 

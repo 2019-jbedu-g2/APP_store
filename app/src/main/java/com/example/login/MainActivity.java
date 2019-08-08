@@ -37,13 +37,17 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                id = idText.getText().toString();
-                pw = pwText.getText().toString();
-                info.clear();
-                info.put("login",id);
-                info.put("zzzzzzzz",pw);
-                MainActivity.NetworkTask networkTask = new MainActivity.NetworkTask(url,info);
-                networkTask.execute();  // 비동기 task 작동.
+                id = idText.getText().toString().trim();
+                pw = pwText.getText().toString().trim();
+                if(id.equals("")||pw.equals("")){
+                    Toast.makeText(getApplicationContext(), "빈칸이 있습니다.", Toast.LENGTH_LONG).show();
+                }else {
+                    info.clear();
+                    info.put("login", id);
+                    info.put("zzzzzzzz", pw);
+                    MainActivity.NetworkTask networkTask = new MainActivity.NetworkTask(url, info);
+                    networkTask.execute();  // 비동기 task 작동.
+                }
             }
         });
     }

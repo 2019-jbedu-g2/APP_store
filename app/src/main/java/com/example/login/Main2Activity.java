@@ -14,8 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
@@ -28,22 +26,27 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class Main2Activity extends AppCompatActivity {
     WebSocketClient wsc;
     ContentValues info = new ContentValues();
-    Button ScannerButton;
+    Button ScannerButton,RefreshButton;
     String barcodenumber = "";
     String s = "";
-    TextView storeView,textView,Type,Status;
+    TextView storeView,textView,Type,Status,TimeView;
     String URL = "ws://192.168.0.8:8000/queue/";
     String url = "http://192.168.0.8:8000/account/";
     String result ="";
     String bar = "";
     String PhoneNum = "";
+
     LinkedHashMap <String,String> offLineList = new LinkedHashMap();
+    ArrayList BarcodeNum = new ArrayList();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,9 +59,14 @@ public class Main2Activity extends AppCompatActivity {
         //storeView.setText(s);
         ScannerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                IntentIntegrator intent = new IntentIntegrator(Main2Activity.this); // zxing 내부의 스캐너 호출
-                intent.setBeepEnabled(true);        // 바코드 인식시에 비프음의 여부
-                intent.initiateScan();              // 스캔화면으로 넘어감.
+                Intent intent = new Intent(Main2Activity.this, OnlineCustomer.class);
+                intent.putExtra("barcodenum",BarcodeNum);
+                startActivityForResult(intent,1);
+            }
+        });
+        RefreshButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                wsc.send("");
             }
         });
     }
@@ -91,24 +99,27 @@ public class Main2Activity extends AppCompatActivity {
                                 System.out.println(messagedata);
                                 JSONArray JSON = new JSONArray(messagedata);
                                 System.out.println(offLineList.entrySet());
-                                for (int i = 0; i <JSON.length();i++){
+                                for (int i = 0; i <JSON.length();i++) {
                                     JSONObject jsonobject = JSON.getJSONObject(i);
                                     String OnOff = jsonobject.getString("onoffline");
                                     System.out.println(jsonobject.getString("barcode"));
-                                    if (OnOff.equals("false")){
+                                    if (OnOff.equals("false")) {
                                         storeView.append(jsonobject.getString("barcode"));
                                         Type.append("온라인고객");
-                                    }else{
+                                    } else {
                                         String Code = jsonobject.getString("barcode");
                                         storeView.append(offLineList.get(Code));
                                         Type.append("방문고객");
                                     }
                                     Status.append(jsonobject.getString("status"));
+                                    BarcodeNum.add(jsonobject.getString("barcode"));
                                     storeView.append("\n");
                                     Type.append("\n");
                                     Status.append("\n");
                                 }
-
+                                Date date = new Date(System.currentTimeMillis());
+                                SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                TimeView.setText(SDF.format(date));
                             }catch (JSONException e){
                                 e.getStackTrace();
                             }
@@ -150,20 +161,14 @@ public class Main2Activity extends AppCompatActivity {
         }
         wsc.connect();
     }
-    public void onActivityResult(int requestCode,int resultCode, Intent data){
-        //  com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE
-        //  = 0x0000c0de; // Only use bottom 16 bits
-        if(requestCode == IntentIntegrator.REQUEST_CODE){
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);  // 결과물을 받을 그릇 생성
-            if(result == null) {
-                Toast.makeText(this, "Cancelled",Toast.LENGTH_LONG).show();     // 결과물이 없다면 취소 토스트 출력
-            } else {
-                barcodenumber=result.getContents();                       // 결과물을 받아서 변수에 집어넣음
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == 1 ){
+            if(resultCode==RESULT_OK){
+                wsc.send("");
             }
-        }else{
-            super.onActivityResult(requestCode,resultCode,data);            // 재시도.
         }
     }
+
     private void initControls(){
         if (ScannerButton == null) {
             ScannerButton = (Button) findViewById(R.id.button3);
@@ -179,6 +184,12 @@ public class Main2Activity extends AppCompatActivity {
         }
         if (Status == null){
             Status = (TextView) findViewById(R.id.Status);
+        }
+        if (RefreshButton == null){
+            RefreshButton = (Button) findViewById(R.id.RefreshButton);
+        }
+        if (TimeView == null){
+            TimeView = (TextView) findViewById(R.id.TimeView);
         }
     }
 
