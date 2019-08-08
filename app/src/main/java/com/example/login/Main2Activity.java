@@ -35,7 +35,7 @@ import java.util.LinkedHashMap;
 public class Main2Activity extends AppCompatActivity {
     WebSocketClient wsc;
     ContentValues info = new ContentValues();
-    Button ScannerButton,RefreshButton;
+    Button ScannerButton,RefreshButton,OffButton;
     String barcodenumber = "";
     String s = "";
     TextView storeView,textView,Type,Status,TimeView;
@@ -67,6 +67,14 @@ public class Main2Activity extends AppCompatActivity {
         RefreshButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 wsc.send("");
+            }
+        });
+        OffButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Main2Activity.this, OfflineCustomer.class);
+                intent.putExtra("phonenum",offLineList);
+                startActivityForResult(intent,2);
             }
         });
     }
@@ -167,6 +175,11 @@ public class Main2Activity extends AppCompatActivity {
                 wsc.send("");
             }
         }
+        if(requestCode == 2){
+            if(resultCode==RESULT_OK){
+                wsc.send("");
+            }
+        }
     }
 
     private void initControls(){
@@ -190,6 +203,9 @@ public class Main2Activity extends AppCompatActivity {
         }
         if (TimeView == null){
             TimeView = (TextView) findViewById(R.id.TimeView);
+        }
+        if (OffButton == null){
+            OffButton = (Button) findViewById(R.id.button4);
         }
     }
 

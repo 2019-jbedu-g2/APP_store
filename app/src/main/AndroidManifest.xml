@@ -13,6 +13,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Main2Activity"></activity>
         <activity android:name=".OnlineCustomer" android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name=".OfflineCustomer" android:theme="@android:style/Theme.Dialog"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
