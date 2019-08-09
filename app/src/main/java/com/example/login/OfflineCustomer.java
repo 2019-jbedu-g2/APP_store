@@ -161,7 +161,7 @@ public class OfflineCustomer extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "확인되었습니다. 환영합니다.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "입장 확인되었습니다.", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent();
                         setResult(RESULT_OK, intent);
                         finish();

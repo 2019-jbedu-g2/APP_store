@@ -26,10 +26,8 @@ public class RequestHttpURLConnection {
             String key;
             String value;
             for(Map.Entry<String, Object> parameter : _params.valueSet()){
-                if(!(parameter.getKey() == "zzzzzzzz")) {
-                    key = parameter.getKey();
-                } else
-                    key="";
+
+                key = parameter.getKey();
                 value = parameter.getValue().toString();
 
                 // 파라미터가 두개 이상일때
