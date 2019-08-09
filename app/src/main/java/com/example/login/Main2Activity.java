@@ -110,20 +110,21 @@ public class Main2Activity extends AppCompatActivity {
                                 for (int i = 0; i <JSON.length();i++) {
                                     JSONObject jsonobject = JSON.getJSONObject(i);
                                     String OnOff = jsonobject.getString("onoffline");
-                                    System.out.println(jsonobject.getString("barcode"));
-                                    if (OnOff.equals("false")) {
-                                        storeView.append(jsonobject.getString("barcode"));
-                                        Type.append("온라인고객");
-                                    } else {
-                                        String Code = jsonobject.getString("barcode");
-                                        storeView.append(offLineList.get(Code));
-                                        Type.append("방문고객");
+                                    if(jsonobject.getString("status").equals("줄서는중")||jsonobject.getString("status").equals("미루기")) {
+                                        if (OnOff.equals("false")) {
+                                            storeView.append(jsonobject.getString("barcode"));
+                                            Type.append("온라인고객");
+                                        } else {
+                                            String Code = jsonobject.getString("barcode");
+                                            storeView.append(offLineList.get(Code));
+                                            Type.append("방문고객");
+                                        }
+                                        Status.append(jsonobject.getString("status"));
+                                        BarcodeNum.add(jsonobject.getString("barcode"));
+                                        storeView.append("\n");
+                                        Type.append("\n");
+                                        Status.append("\n");
                                     }
-                                    Status.append(jsonobject.getString("status"));
-                                    BarcodeNum.add(jsonobject.getString("barcode"));
-                                    storeView.append("\n");
-                                    Type.append("\n");
-                                    Status.append("\n");
                                 }
                                 Date date = new Date(System.currentTimeMillis());
                                 SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

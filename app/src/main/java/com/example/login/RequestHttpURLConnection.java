@@ -44,6 +44,7 @@ public class RequestHttpURLConnection {
         }
         try{
             _url = _url + sbParams.toString();
+            System.out.println(_url);
             URL url = new URL(_url);
             urlConn = (HttpURLConnection) url.openConnection();
             urlConn.setReadTimeout(1000);
