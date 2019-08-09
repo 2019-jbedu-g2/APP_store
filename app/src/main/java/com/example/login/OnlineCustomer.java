@@ -21,31 +21,19 @@ public class OnlineCustomer extends Activity {
     EditText BarcodeNumber;
     Button Close, Confirm, Scanner;
     ContentValues info = new ContentValues();
-    String url = "http://192.168.0.8:8000/account/";
+    String url = "http://192.168.0.8:8000/";
     String result="";
-    String Num = "";
     ArrayList barnum = new ArrayList();
 
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀바 삭제.
-        initControls();
         setContentView(R.layout.online_customer);
+
+        initControls();
+
         Intent intent = getIntent();
         barnum = intent.getStringArrayListExtra("barcodenum");
-        if (Scanner == null) {
-            Scanner = (Button) findViewById(R.id.scannerButton);
-        }
-        if (Confirm == null) {
-            Confirm = (Button) findViewById(R.id.confirmButton);
-        }
-        if (Close == null) {
-            Close = (Button) findViewById(R.id.closeButton);
-        }
-        if (BarcodeNumber == null){
-            BarcodeNumber = (EditText) findViewById(R.id.barcodeText);
-        }
-
 
         // 스캐너 누를 시
         Scanner.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +52,7 @@ public class OnlineCustomer extends Activity {
                     Toast.makeText(getApplicationContext(), "번호를 입력하세요.", Toast.LENGTH_LONG).show();
                 } else if (barnum.contains(BarcodeNumber.getText().toString().trim())) {                         // 대기 명단내 존재하는지 확인
                     info.clear();
-                    info.put("confirm", BarcodeNumber.getText().toString().trim());
+                    info.put("account/confirm", BarcodeNumber.getText().toString().trim());
                     OnlineCustomer.NetworkTask networkTask = new OnlineCustomer.NetworkTask(url, info);
                     networkTask.execute();  // 비동기 task 작동.
                 } else {                                                 // 존재하지 않을때의 처리
@@ -97,8 +85,6 @@ public class OnlineCustomer extends Activity {
 
     // 바코드 스캐너를 통해 받은 값을 전달 받음.
     public void onActivityResult(int requestCode,int resultCode, Intent data){
-        //  com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE
-        //  = 0x0000c0de; // Only use bottom 16 bits
         if(requestCode == IntentIntegrator.REQUEST_CODE){
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);  // 결과물을 받을 그릇 생성
             if(result == null) {

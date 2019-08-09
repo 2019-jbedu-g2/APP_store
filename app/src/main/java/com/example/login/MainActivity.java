@@ -1,13 +1,10 @@
 package com.example.login;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,10 +12,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static Context mContext;
-    public static final String TAG = "MainActivity";
-    String url = "http://192.168.0.8:8000/account/";
-    String url2 = "http://192.168.0.8:8000/";
+    String url = "http://192.168.0.8:8000/";
     EditText idText = null;
     EditText pwText = null;
     Button loginButton;
@@ -45,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                     info.clear();
                     StringBuffer sb = new StringBuffer();
                     sb.append(id).append("/").append(pw);
-                    info.put("login", sb.toString());
+                    info.put("account/login", sb.toString());
                     MainActivity.NetworkTask networkTask = new MainActivity.NetworkTask(url, info);
                     networkTask.execute();  // 비동기 task 작동.
                 }
@@ -90,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
         // 끝난후 ui진행
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            result1 = s.substring(0,9);
-            result2 = s.substring(10).trim();
+            if(!(s.length()<10)) {
+                result1 = s.substring(0, 9);
+                result2 = s.substring(10).trim();
+            }
             if(s.equals("아이디랑 비밀번호가 다릅니다.")) {
                 runOnUiThread(new Runnable() {
                     @Override

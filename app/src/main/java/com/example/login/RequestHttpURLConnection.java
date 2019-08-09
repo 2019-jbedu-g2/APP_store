@@ -1,16 +1,12 @@
 package com.example.login;
 
 import android.content.ContentValues;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Map;
 
@@ -58,12 +54,12 @@ public class RequestHttpURLConnection {
             BufferedReader reader = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), "UTF-8"));
 
             String line;
-            String page = "";
+            StringBuffer page = new StringBuffer();
 
             while ((line = reader.readLine()) != null){
-                page += line;
+                page.append(line);
             }
-            return page;
+            return page.toString();
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

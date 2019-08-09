@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +17,6 @@ import android.widget.Toast;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_6455;
-import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,18 +27,16 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class Main2Activity extends AppCompatActivity {
     WebSocketClient wsc;
     ContentValues info = new ContentValues();
     Button ScannerButton,RefreshButton,OffButton;
-    String barcodenumber = "";
     String s = "";
     TextView storeView,textView,Type,Status,TimeView;
-    String URL = "ws://192.168.0.8:8000/queue/";
-    String url = "http://192.168.0.8:8000/account/";
+    String wsURL = "ws://192.168.0.8:8000/";
+    String url = "http://192.168.0.8:8000/";
     String result ="";
     String bar = "";
     String PhoneNum = "";
@@ -52,11 +48,10 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         initControls();
-        Intent getin = getIntent();
+
         s = getIntent().getStringExtra("result");
         textView.setText(getIntent().getStringExtra("storeName"));
         WebSocketConnect(s);
-        //storeView.setText(s);
         ScannerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Main2Activity.this, OnlineCustomer.class);
@@ -82,9 +77,7 @@ public class Main2Activity extends AppCompatActivity {
         try{
             Draft d = new Draft_6455();
             StringBuffer SB = new StringBuffer();
-            SB.append(URL);
-            SB.append(storeNum);
-            SB.append("/master");
+            SB.append(wsURL).append("queue/").append(storeNum).append("/master");
 
             wsc = new WebSocketClient(new URI(SB.toString()),d) {
                 @Override
@@ -212,7 +205,6 @@ public class Main2Activity extends AppCompatActivity {
 
     public void onBackButtonClicked(View v) {
         wsc.close();
-        //Toast.makeText(getApplicationContext(), "메인화면으로 돌아갑니다.", Toast.LENGTH_LONG).show();
         finish();
 
     }
@@ -227,7 +219,7 @@ public class Main2Activity extends AppCompatActivity {
             PhoneNum = "";
             PhoneNum = etEdit.getText().toString();
             info.clear();
-            info.put("off",s);
+            info.put("account/off",s);
             NetworkTask networkTask = new NetworkTask(url,info);
             networkTask.execute();
             }
@@ -268,7 +260,7 @@ public class Main2Activity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             bar ="";
-            if (s.length() != 0) {
+            if (!(s.length() < 9)) {
                 bar = s.substring(0, 10);
             }
             offLineList.put(bar,PhoneNum);

@@ -12,43 +12,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class OfflineCustomer extends Activity {
     EditText PhoneNumber;
     Button Close, Confirm, Cancel;
     ContentValues info = new ContentValues();
-    String url = "http://192.168.0.8:8000/account/";
+    String url = "http://192.168.0.8:8000/";
     String result="";
-    String Num = "";
     HashMap<String,String> phonenum = new HashMap();
 
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀바 삭제.
-        initControls();
         setContentView(R.layout.offline_customer);
+
+        initControls();
+
         Intent intent = getIntent();
         phonenum = (HashMap<String,String>) intent.getSerializableExtra("phonenum");
-        if (Cancel == null) {
-            Cancel = (Button) findViewById(R.id.offcancelButton);
-        }
-        if (Confirm == null) {
-            Confirm = (Button) findViewById(R.id.offconfirmButton);
-        }
-        if (Close == null) {
-            Close = (Button) findViewById(R.id.offcloseButton);
-        }
-        if (PhoneNumber == null){
-            PhoneNumber = (EditText) findViewById(R.id.PhoneNumText);
-        }
-
 
         // 줄서기 취소 누를 시
         Cancel.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +45,7 @@ public class OfflineCustomer extends Activity {
                     if (Key.equals(null)){
                         Toast.makeText(getApplicationContext(), "해당 고객 번호가 존재하지 않습니다.", Toast.LENGTH_LONG).show();
                     }else {
-                        info.put("cancel", Key);
+                        info.put("account/cancel", Key);
                         OfflineCustomer.NetworkTask networkTask = new OfflineCustomer.NetworkTask(url, info);
                         networkTask.execute();  // 비동기 task 작동.
                     }
@@ -83,7 +66,7 @@ public class OfflineCustomer extends Activity {
                     if (Key.equals(null)){
                         Toast.makeText(getApplicationContext(), "해당 고객 번호가 존재하지 않습니다.", Toast.LENGTH_LONG).show();
                     }else {
-                        info.put("confirm", Key);
+                        info.put("account/confirm", Key);
                         OfflineCustomer.NetworkTask networkTask = new OfflineCustomer.NetworkTask(url, info);
                         networkTask.execute();  // 비동기 task 작동.
                     }
@@ -132,6 +115,8 @@ public class OfflineCustomer extends Activity {
         }
         return true;
     }
+
+    // http 통신.
     public class NetworkTask extends AsyncTask<Void, Void, String> {
 
         String url;
