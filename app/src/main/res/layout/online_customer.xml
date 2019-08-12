@@ -37,7 +37,7 @@
         <Button
             android:id="@+id/scannerButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="40sp"
             android:layout_weight="1"
             android:background="#FFFFFF"
             android:text="스캐너열기"
@@ -46,7 +46,7 @@
         <Button
             android:id="@+id/confirmButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="40sp"
             android:layout_weight="1"
             android:background="#ffffff"
             android:text="확인"
@@ -55,7 +55,7 @@
         <Button
             android:id="@+id/closeButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="40sp"
             android:layout_weight="1"
             android:background="#ffffff"
             android:text="닫기"

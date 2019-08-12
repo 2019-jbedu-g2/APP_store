@@ -18,12 +18,12 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="320dp"
+                android:layout_width="320sp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="가게명"
-                android:textSize="40dp" />
+                android:textSize="40sp" />
 
         </LinearLayout>
 
@@ -35,7 +35,7 @@
             <Button
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="50sp"
                 android:layout_weight="1"
                 android:onClick="onBackButtonClicked"
                 android:text="LogOut" />
@@ -60,14 +60,14 @@
             <Button
                 android:id="@+id/RefreshButton"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="50sp"
                 android:layout_weight="1"
                 android:text="새로고침" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="40sp"
             android:orientation="horizontal">
 
             <TextView
@@ -87,7 +87,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="타입"
-                android:textSize="30dp" />
+                android:textSize="30sp" />
 
             <TextView
                 android:id="@+id/textView9"
@@ -96,12 +96,12 @@
                 android:layout_weight="1"
                 android:text="현황"
                 android:gravity="center_horizontal"
-                android:textSize="30dp" />
+                android:textSize="30sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="614dp"
+            android:layout_height="614sp"
             android:layout_weight="1"
             android:orientation="vertical">
 

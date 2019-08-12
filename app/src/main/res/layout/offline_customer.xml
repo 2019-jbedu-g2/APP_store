@@ -15,7 +15,7 @@
             android:gravity="center"
             android:background="#ffffff"
             android:layout_width="match_parent"
-            android:layout_height="53dp" />
+            android:layout_height="53sp" />
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
@@ -36,7 +36,7 @@
         <Button
             android:id="@+id/offconfirmButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="40sp"
             android:layout_weight="1"
             android:background="#ffffff"
             android:text="확인"
@@ -44,7 +44,7 @@
         <Button
             android:id="@+id/offcancelButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="40sp"
             android:layout_weight="1"
             android:background="#ffffff"
             android:text="줄서기 취소"
@@ -52,7 +52,7 @@
         <Button
             android:id="@+id/offcloseButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="40sp"
             android:layout_weight="1"
             android:background="#ffffff"
             android:text="닫기"

@@ -21,7 +21,7 @@ public class OnlineCustomer extends Activity {
     EditText BarcodeNumber;
     Button Close, Confirm, Scanner;
     ContentValues info = new ContentValues();
-    String url = "http://192.168.0.8:8000/";
+    String url = "http://192.168.0.20:8000/";
     String result="";
     ArrayList barnum = new ArrayList();
 
