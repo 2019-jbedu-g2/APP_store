@@ -41,7 +41,7 @@ public class Main2Activity extends AppCompatActivity {
     String bar = "";
     String PhoneNum = "";
 
-    LinkedHashMap <String,String> offLineList = new LinkedHashMap();
+    //LinkedHashMap <String,String> offLineList = new LinkedHashMap();
     ArrayList BarcodeNum = new ArrayList();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Main2Activity.this, OfflineCustomer.class);
-                intent.putExtra("phonenum",offLineList);
+                intent.putExtra("barcodenum",BarcodeNum);
                 startActivityForResult(intent,2);
             }
         });
@@ -99,7 +99,7 @@ public class Main2Activity extends AppCompatActivity {
                                 String messagedata = jsonObject.getString("message");
                                 System.out.println(messagedata);
                                 JSONArray JSON = new JSONArray(messagedata);
-                                System.out.println(offLineList.entrySet());
+                               // System.out.println(offLineList.entrySet());
                                 for (int i = 0; i <JSON.length();i++) {
                                     JSONObject jsonobject = JSON.getJSONObject(i);
                                     String OnOff = jsonobject.getString("onoffline");
@@ -109,7 +109,7 @@ public class Main2Activity extends AppCompatActivity {
                                             Type.append("온라인고객");
                                         } else {
                                             String Code = jsonobject.getString("barcode");
-                                            storeView.append(offLineList.get(Code));
+                                            storeView.append(jsonobject.getString("barcode"));
                                             Type.append("방문고객");
                                         }
                                         Status.append(jsonobject.getString("status"));
@@ -219,7 +219,9 @@ public class Main2Activity extends AppCompatActivity {
             PhoneNum = "";
             PhoneNum = etEdit.getText().toString();
             info.clear();
-            info.put("account/off",s);
+            StringBuffer SB = new StringBuffer();
+            SB.append(s).append("/").append(PhoneNum);
+            info.put("account/off",SB.toString());
             NetworkTask networkTask = new NetworkTask(url,info);
             networkTask.execute();
             }
@@ -263,7 +265,7 @@ public class Main2Activity extends AppCompatActivity {
             if (!(s.length() < 9)) {
                 bar = s.substring(0, 10);
             }
-            offLineList.put(bar,PhoneNum);
+            //offLineList.put(bar,PhoneNum);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
