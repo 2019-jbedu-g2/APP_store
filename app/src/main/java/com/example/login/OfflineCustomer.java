@@ -22,6 +22,7 @@ public class OfflineCustomer extends Activity {
     String url = URLSetting.getURL();
     String result="";
 
+
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); // 타이틀바 삭제.

@@ -8,8 +8,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,51 +31,103 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 
 public class Main2Activity extends AppCompatActivity {
     WebSocketClient wsc;
     ContentValues info = new ContentValues();
-    Button ScannerButton,RefreshButton,OffButton;
-    String s = "";
-    TextView storeView,textView,Type,Status,TimeView;
+    Button RefreshButton;       // 새로고침 버튼
+    String storeNum = "";          // 매장번호
+    TextView textView,TimeView;     // 시간뷰와 시간안내뷰
     String wsURL = URLSetting.getWsURL();
     String url = URLSetting.getURL();
-    String result ="";
-    String PhoneNum = "";
+    String result ="";      // 통신 결과 변수
+    String PhoneNum = "";       // 전화번호 변수
 
-    //LinkedHashMap <String,String> offLineList = new LinkedHashMap();
-    ArrayList BarcodeNum = new ArrayList();
+    ListView listView;
+    CustomerAdapter adapter;
+
+    ArrayList BarcodeNum = new ArrayList();     // 고객 번호 비교용 ArrayList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
         initControls();
 
-        s = getIntent().getStringExtra("result");
+        adapter = new CustomerAdapter();
+
+        storeNum = getIntent().getStringExtra("result");
         textView.setText(getIntent().getStringExtra("storeName"));
-        WebSocketConnect(s);
-        ScannerButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(Main2Activity.this, OnlineCustomer.class);
-                intent.putExtra("barcodenum",BarcodeNum);
-                startActivityForResult(intent,1);
-            }
-        });
+
+        WebSocketConnect(storeNum);
+
+
         RefreshButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 wsc.send("");
             }
         });
-        OffButton.setOnClickListener(new View.OnClickListener() {
+
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Main2Activity.this, OfflineCustomer.class);
-                intent.putExtra("barcodenum",BarcodeNum);
-                startActivityForResult(intent,2);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CustomerItem item = (CustomerItem) adapter.getItem(position);
+
+                if (item.getType() == "ONLINE") {
+                    Intent intent = new Intent(Main2Activity.this, OnlineCustomer.class);
+                    intent.putExtra("barcodenum", BarcodeNum);
+                    startActivityForResult(intent,1);
+                } else {
+                    Intent intent = new Intent(Main2Activity.this, OfflineCustomer.class);
+                    intent.putExtra("barcodenum",BarcodeNum);
+                    startActivityForResult(intent,2);
+                }
+                overridePendingTransition(R.anim.translate_up, R.anim.translate_down);
+
+                Toast.makeText(getApplicationContext(), "선택 : " + item.getBarcode(), Toast.LENGTH_LONG).show();
             }
         });
     }
+
+    class CustomerAdapter extends BaseAdapter {
+        ArrayList<CustomerItem> items = new ArrayList<CustomerItem>();
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        public void addItem(CustomerItem item) {
+            items.add(item);
+        }
+
+        public void refresh() {
+            items.clear();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            CustomerItemView customerItemView = new CustomerItemView(getApplicationContext());
+            CustomerItem item = items.get(position);
+            customerItemView.setType(item.type);
+            customerItemView.setBarcode(item.barcode);
+            customerItemView.setStatus(item.status);
+            return customerItemView;
+        }
+    }
+
     public void WebSocketConnect(String storeNum){
         try{
             Draft d = new Draft_6455();
@@ -90,32 +146,29 @@ public class Main2Activity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            storeView.setText("");
-                            Type.setText("");
-                            Status.setText("");
                             try {
                                 JSONObject jsonObject = new JSONObject(message);
                                 String messagedata = jsonObject.getString("message");
                                 System.out.println(messagedata);
                                 JSONArray JSON = new JSONArray(messagedata);
-                               // System.out.println(offLineList.entrySet());
+                                adapter.refresh();
                                 for (int i = 0; i <JSON.length();i++) {
                                     JSONObject jsonobject = JSON.getJSONObject(i);
                                     String OnOff = jsonobject.getString("onoffline");
+                                    String dspOnOff;
                                     if(jsonobject.getString("status").equals("줄서는중")||jsonobject.getString("status").equals("미루기")) {
                                         if (OnOff.equals("false")) {
-                                            storeView.append(jsonobject.getString("barcode"));
-                                            Type.append("온라인고객");
+                                            dspOnOff = "ONLINE";
                                         } else {
-                                            String Code = jsonobject.getString("barcode");
-                                            storeView.append(jsonobject.getString("barcode"));
-                                            Type.append("방문고객");
+
+                                            dspOnOff = "OFFLINE";
                                         }
-                                        Status.append(jsonobject.getString("status"));
                                         BarcodeNum.add(jsonobject.getString("barcode"));
-                                        storeView.append("\n");
-                                        Type.append("\n");
-                                        Status.append("\n");
+
+                                        String dspBarcode = jsonobject.getString("barcode");
+                                        String dspStatus = jsonobject.getString("status");
+                                        adapter.addItem(new CustomerItem(dspOnOff, dspBarcode, dspStatus));
+                                        adapter.notifyDataSetChanged();
                                     }
                                 }
                                 Date date = new Date(System.currentTimeMillis());
@@ -176,20 +229,8 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     private void initControls(){
-        if (ScannerButton == null) {
-            ScannerButton = (Button) findViewById(R.id.button3);
-        }
-        if (storeView == null) {
-            storeView = (TextView) findViewById(R.id.storeView);
-        }
         if (textView == null){
             textView = (TextView) findViewById(R.id.textView);
-        }
-        if (Type == null) {
-            Type = (TextView) findViewById(R.id.Type);
-        }
-        if (Status == null){
-            Status = (TextView) findViewById(R.id.Status);
         }
         if (RefreshButton == null){
             RefreshButton = (Button) findViewById(R.id.RefreshButton);
@@ -197,9 +238,10 @@ public class Main2Activity extends AppCompatActivity {
         if (TimeView == null){
             TimeView = (TextView) findViewById(R.id.TimeView);
         }
-        if (OffButton == null){
-            OffButton = (Button) findViewById(R.id.button4);
+        if (listView == null){
+            listView = findViewById(R.id.listview);
         }
+
     }
 
     public void onBackButtonClicked(View v) {
@@ -219,7 +261,7 @@ public class Main2Activity extends AppCompatActivity {
             PhoneNum = etEdit.getText().toString();
             info.clear();
             StringBuffer SB = new StringBuffer();
-            SB.append(s).append("/").append(PhoneNum);
+            SB.append(storeNum).append("/").append(PhoneNum);
             info.put("account/off",SB.toString());
             NetworkTask networkTask = new NetworkTask(url,info);
             networkTask.execute();

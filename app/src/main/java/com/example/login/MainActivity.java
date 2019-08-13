@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     ContentValues info = new ContentValues();
     String id = "";
     String pw = "";
-    String result, result1,result2;
+    String result, result1,result2;     // 통신 결과 / 가게번호 / 가게명
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
