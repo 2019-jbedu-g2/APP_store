@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="새로고침시간" />
+            android:text="새로고침 시간" />
 
         <TextView
             android:id="@+id/TimeView"

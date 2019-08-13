@@ -42,13 +42,12 @@ public class Main2Activity extends AppCompatActivity {
     String wsURL = "ws://192.168.0.20:8000/";
     String url = "http://192.168.0.20:8000/";
     String result ="";
-    String bar = "";
     String PhoneNum = "";
 
     ListView listView;
     CustomerAdapter adapter;
 
-    LinkedHashMap <String,String> offLineList = new LinkedHashMap();
+//    LinkedHashMap <String,String> offLineList = new LinkedHashMap();
     ArrayList BarcodeNum = new ArrayList();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +77,7 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Main2Activity.this, OfflineCustomer.class);
-                intent.putExtra("phonenum",offLineList);
+                intent.putExtra("barcodenum",BarcodeNum);
                 startActivityForResult(intent,2);
             }
         });
@@ -96,7 +95,7 @@ public class Main2Activity extends AppCompatActivity {
                     startActivityForResult(intent,1);
                 } else {
                     Intent intent = new Intent(Main2Activity.this, OfflineCustomer.class);
-                    intent.putExtra("phonenum", offLineList);
+                    intent.putExtra("barcodenum",BarcodeNum);
                     startActivityForResult(intent,2);
                 }
                 overridePendingTransition(R.anim.translate_up, R.anim.translate_down);
@@ -169,7 +168,7 @@ public class Main2Activity extends AppCompatActivity {
                                 String messagedata = jsonObject.getString("message");
                                 System.out.println(messagedata);
                                 JSONArray JSON = new JSONArray(messagedata);
-                                System.out.println(offLineList.entrySet());
+//                                System.out.println(offLineList.entrySet());
                                 adapter.refresh();
                                 for (int i = 0; i <JSON.length();i++) {
                                     JSONObject jsonobject = JSON.getJSONObject(i);
@@ -300,7 +299,10 @@ public class Main2Activity extends AppCompatActivity {
             PhoneNum = "";
             PhoneNum = etEdit.getText().toString();
             info.clear();
-            info.put("account/off",s);
+//            info.put("account/off",s);
+            StringBuffer SB = new StringBuffer();
+            SB.append(s).append("/").append(PhoneNum);
+            info.put("account/off",SB.toString());
             NetworkTask networkTask = new NetworkTask(url,info);
             networkTask.execute();
             }
@@ -340,11 +342,7 @@ public class Main2Activity extends AppCompatActivity {
         // 끝난후 ui진행
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            bar ="";
-            if (!(s.length() < 9)) {
-                bar = s.substring(0, 10);
-            }
-            offLineList.put(bar,PhoneNum);
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
