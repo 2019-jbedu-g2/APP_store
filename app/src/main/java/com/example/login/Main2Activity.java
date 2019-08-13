@@ -35,8 +35,8 @@ public class Main2Activity extends AppCompatActivity {
     Button ScannerButton,RefreshButton,OffButton;
     String s = "";
     TextView storeView,textView,Type,Status,TimeView;
-    String wsURL = "ws://192.168.0.20:8000/";
-    String url = "http://192.168.0.20:8000/";
+    String wsURL = URLSetting.getWsURL();
+    String url = URLSetting.getURL();
     String result ="";
     String PhoneNum = "";
 

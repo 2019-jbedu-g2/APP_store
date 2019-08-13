@@ -19,7 +19,7 @@ public class OfflineCustomer extends Activity {
     EditText PhoneNumber;
     Button Close, Confirm, Cancel;
     ContentValues info = new ContentValues();
-    String url = "http://192.168.0.20:8000/";
+    String url = URLSetting.getURL();
     String result="";
 
     protected  void onCreate(Bundle savedInstanceState) {

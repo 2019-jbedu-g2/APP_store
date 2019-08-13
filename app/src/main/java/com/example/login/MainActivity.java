@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    String url = "http://192.168.0.20:8000/";
+    String url = URLSetting.getURL();
     EditText idText = null;
     EditText pwText = null;
     Button loginButton;
