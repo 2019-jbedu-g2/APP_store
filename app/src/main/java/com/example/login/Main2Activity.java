@@ -38,7 +38,6 @@ public class Main2Activity extends AppCompatActivity {
     String wsURL = "ws://192.168.0.20:8000/";
     String url = "http://192.168.0.20:8000/";
     String result ="";
-    String bar = "";
     String PhoneNum = "";
 
     //LinkedHashMap <String,String> offLineList = new LinkedHashMap();
@@ -261,11 +260,6 @@ public class Main2Activity extends AppCompatActivity {
         // 끝난후 ui진행
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            bar ="";
-            if (!(s.length() < 9)) {
-                bar = s.substring(0, 10);
-            }
-            //offLineList.put(bar,PhoneNum);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

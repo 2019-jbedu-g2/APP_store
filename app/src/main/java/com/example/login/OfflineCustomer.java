@@ -21,7 +21,6 @@ public class OfflineCustomer extends Activity {
     ContentValues info = new ContentValues();
     String url = "http://192.168.0.20:8000/";
     String result="";
-    //HashMap<String,String> phonenum = new HashMap();
 
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +28,6 @@ public class OfflineCustomer extends Activity {
         setContentView(R.layout.offline_customer);
 
         initControls();
-
-        Intent intent = getIntent();
-        //phonenum = (HashMap<String,String>) intent.getSerializableExtra("phonenum");
 
         // 줄서기 취소 누를 시
         Cancel.setOnClickListener(new View.OnClickListener() {
@@ -45,16 +41,6 @@ public class OfflineCustomer extends Activity {
                     OfflineCustomer.NetworkTask networkTask = new OfflineCustomer.NetworkTask(url, info);
                     networkTask.execute();  // 비동기 task 작동.
                 }
-//                } else if (phonenum.containsValue(PhoneNumber.getText().toString().trim())) {                         // 대기 명단내 존재하는지 확인
-
-//                    String Key = getMapKey(PhoneNumber.getText().toString().trim());
-//                    if (Key.equals(null)){
-//                        Toast.makeText(getApplicationContext(), "해당 고객 번호가 존재하지 않습니다.", Toast.LENGTH_LONG).show();
-//                    }else {
-
-//                } else {                                                 // 존재하지 않을때의 처리
-//                    Toast.makeText(getApplicationContext(), "해당 고객 번호가 존재하지 않습니다.", Toast.LENGTH_LONG).show();
-//                }
             }
         });
 
@@ -69,17 +55,6 @@ public class OfflineCustomer extends Activity {
                     OfflineCustomer.NetworkTask networkTask = new OfflineCustomer.NetworkTask(url, info);
                     networkTask.execute();  // 비동기 task 작동.
                 }
-//                } else if (phonenum.containsValue(PhoneNumber.getText().toString().trim())) {                         // 대기 명단내 존재하는지 확인
-//
-//                    String Key = getMapKey(PhoneNumber.getText().toString().trim());
-//                    if (Key.equals(null)){
-//                        Toast.makeText(getApplicationContext(), "해당 고객 번호가 존재하지 않습니다.", Toast.LENGTH_LONG).show();
-//                    }else {
-//
-//                    }
-//                } else {                                                 // 존재하지 않을때의 처리
-//                    Toast.makeText(getApplicationContext(), "해당 고객 번호가 존재하지 않습니다.", Toast.LENGTH_LONG).show();
-//                }
             }
         });
 
@@ -90,14 +65,6 @@ public class OfflineCustomer extends Activity {
             }
         });
     }
-//    public String getMapKey(String value){
-//        for (Map.Entry<String,String> entry : phonenum.entrySet()) {
-//            if(entry.getValue().equals(value)){
-//                return entry.getKey();
-//            }
-//        }
-//        return null;
-//    }
     private void initControls(){
 
         if (Cancel == null) {
