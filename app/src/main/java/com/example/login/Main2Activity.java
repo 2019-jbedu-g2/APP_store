@@ -39,8 +39,8 @@ public class Main2Activity extends AppCompatActivity {
     Button ScannerButton,RefreshButton,OffButton;
     String s = "";
     TextView storeView,textView,Type,Status,TimeView;
-    String wsURL = "ws://192.168.0.2:8000/";
-    String url = "http://192.168.0.2:8000/";
+    String wsURL = "ws://192.168.0.20:8000/";
+    String url = "http://192.168.0.20:8000/";
     String result ="";
     String bar = "";
     String PhoneNum = "";
@@ -175,18 +175,17 @@ public class Main2Activity extends AppCompatActivity {
                                     JSONObject jsonobject = JSON.getJSONObject(i);
                                     String OnOff = jsonobject.getString("onoffline");
                                     String dspOnOff;
-                                    String dspBarcode;
                                     if(jsonobject.getString("status").equals("줄서는중")||jsonobject.getString("status").equals("미루기")) {
                                         if (OnOff.equals("false")) {
                                             storeView.append(jsonobject.getString("barcode"));
                                             Type.append("온라인고객");
-                                            dspBarcode = jsonobject.getString("barcode");
                                             dspOnOff = "ONLINE";
                                         } else {
-                                            String Code = jsonobject.getString("barcode");
-                                            storeView.append(offLineList.get(Code));
+//                                            String Code = jsonobject.getString("barcode");
+//                                            storeView.append(offLineList.get(Code));
+                                            storeView.append(jsonobject.getString("barcode"));
                                             Type.append("방문고객");
-                                            dspBarcode = offLineList.get(Code);
+//                                            dspBarcode = offLineList.get(Code);
                                             dspOnOff = "OFFLINE";
                                         }
                                         Status.append(jsonobject.getString("status"));
@@ -195,6 +194,7 @@ public class Main2Activity extends AppCompatActivity {
                                         Type.append("\n");
                                         Status.append("\n");
 
+                                        String dspBarcode = jsonobject.getString("barcode");
                                         String dspStatus = jsonobject.getString("status");
                                         adapter.addItem(new CustomerItem(dspOnOff, dspBarcode, dspStatus));
                                         adapter.notifyDataSetChanged();
